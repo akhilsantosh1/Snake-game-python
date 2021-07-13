@@ -1,0 +1,289 @@
+"""
+This code contains the main snake class. main stucture on how the snake works
+"""
+
+class Snake_Block:
+    """Creates blocks of the snake which are appending in list of Snake class
+
+    Attributes:
+    -----------
+        head : tuple(int, int)
+            The coordinates of the snake which is stored in a tuple
+
+        size : tuple(int, int)
+            the size of a block of a snake sored in a tuple
+
+        colour : tuple(int, int, int)
+            the colour(r,g,b) of the snake stored in a tuple
+
+    Methods:
+    ----------
+        get_coordinates():
+            Used to returns coordinates tuple of the head
+
+        get_size():
+            Used to return size tuple of the block of the snake
+
+        get_colour():
+            Used to returns colour of the block of the snake
+    """
+
+    def __init__(self, head, size, colour):
+        """Initialize head,size,color from snake
+        Parameters:
+        ----------
+        head = (height//2,width//2) of individual block of snake
+        ----
+        color = assign color to the snake with tuples (75,75,75) of individual block of snake
+        ----
+        size = assigns size of the block of a snake (30,30)"""
+        self.head = head
+        self.size = size
+        self.colour = colour
+
+    def get_coordinates(self):
+        '''Returns x and y coordinates of the head as a tuple
+        ------
+        example: (300,300)'''
+        return self.head
+
+    def get_size(self):
+        '''Returns size of the block of the snake as a tuple
+        ------
+        example: (30,30)'''
+        return self.size
+
+    def get_colour(self):
+        '''Returns color of the snake as a tuple
+        ------
+        example: (75,75,75)'''
+        return self.colour
+
+class Snake:
+    '''creates snake body as a list to append snake block objects.
+
+    Attributes:
+    ---------
+        snake_size : int
+            Increase the value when a new body part is appended to the list
+
+        body_parts : list
+            snake body with head and all the body parts of the snake
+
+        fruit : tuple(int,int)
+            fruit block coordinates
+
+        size : tuple(int,int)
+            size of a block
+
+        left_top : tuple(int,int)
+            top left coordinate of the window
+            ----
+            ex:-(0,0)
+
+        right_down : tuple(int,int)
+            down right coordinate of the window
+            ----
+            ex:-(600,600)
+
+        collision : bool
+            checks weather the collison takes place or not and returns bool value
+
+    Methods:
+    ---------
+        check_collision_with_self():
+            Checks whether the coordinates of the head of the snake is equal
+            to the coordinates of the body.
+            if the coordinates are equal return TRUE
+            if the coordinates not equal return FALSE.
+
+        check_collision_with_fruit():
+            Checks whether the coordinates of the head of the snake
+            is same as the coordinates of the fruit.
+            if the coordinates are same returns TRUE
+            if not returns FALSE.
+
+        grow():
+            adds new body part to the body(list) of the snake
+
+        inside_bounds():
+            Checks whether the snake head is inside the limits or boundaries
+            of the window
+
+        check_collision():
+            checks whether the snake is collision between fruit and snake head
+            has occured or not and returns bool value
+
+        move_up():
+            moves the head of the snake to 'y' axis negitive direction
+
+        move_down():
+            moves the head of the snake to 'y' axis positive direction
+
+        move_left():
+            moves the head of the snake to 'x' axis positive direction
+
+        move_right():
+            moves the head of the snake to 'x' axis negitive direction
+    '''
+    def __init__(self, head, size, colour):
+        '''Initialise head,size,colour of a snake and
+         append first block of the snake as its head
+        Parameters:
+        ----------
+        head = (height//2,width//2)
+        ----
+        color = assign color to the snake with tuples (75,75,75)
+        ----
+        size = assigns size of the block of a snake'''
+        self.head = head
+        self.size = size
+        self.colour = colour
+        self.snake_size = 1
+        self.iter = 0
+        self.dir_x = size[0]
+        self.dir_y = size[1]
+        self.body_parts = []
+        self.body_parts.append(Snake_Block(head, size, colour))
+
+    def move_up(self):
+        '''Moves head of the snake to upward direction
+        and the body parts follow the snake
+        where
+        ----------
+        head_x = head x coordinates
+        ----
+        head_y = head y coordinates'''
+        head_x = self.body_parts[0].head[0]
+        head_y = self.body_parts[0].head[1]
+        snake_lenght = len(self.body_parts)-1
+        for i in range(snake_lenght, -1, -1):
+            if i != 0:
+                self.body_parts[i].head = self.body_parts[i-1].head
+        self.body_parts[0].head = (head_x, head_y-self.dir_y)
+
+    def move_left(self):
+        '''Moves head of the snake to left direction
+         and the body parts follow the snake
+        where
+        ----------
+        head_x = head x coordinates
+        ----
+        head_y = head y coordinates'''
+        head_x = self.body_parts[0].head[0]
+        head_y = self.body_parts[0].head[1]
+        snake_length = len(self.body_parts)-1
+        for i in range(snake_length, -1, -1):
+            if i != 0:
+                self.body_parts[i].head = self.body_parts[i-1].head
+        self.body_parts[0].head = (head_x-self.dir_x, head_y)
+
+    def move_right(self):
+        '''Moves head of the snake to right direction
+         and the body parts follow the snake
+        where
+        -------
+        head_x = head x coordinates
+        ----
+        head_y = head y coordinates'''
+        head_x = self.body_parts[0].head[0]
+        head_y = self.body_parts[0].head[1]
+        snake_length = len(self.body_parts)-1
+        for i in range(snake_length, -1, -1):
+            if i != 0:
+                self.body_parts[i].head = self.body_parts[i-1].head
+        self.body_parts[0].head = (head_x+self.dir_x, head_y)
+
+    def move_down(self):
+        '''Moves head of the snake to downward direction
+         and the body parts follow the snake
+        where
+        ----------
+        head_x = head x coordinates
+        ----
+        head_y = head y coordinates'''
+        head_x = self.body_parts[0].head[0]
+        head_y = self.body_parts[0].head[1]
+        snake_length = len(self.body_parts)-1
+        for i in range(snake_length, -1, -1):
+            if i != 0:
+                self.body_parts[i].head = self.body_parts[i-1].head
+        self.body_parts[0].head = (head_x, head_y+self.dir_y)
+
+
+    def check_collision_with_fruit(self, fruit, size):
+        '''if collision between fruit and snake head occured
+        new body part will be added to snake list
+        parameters:
+        ------------
+        fruit = uses the random coordinates of the fruit
+        ----
+        size = uses fruit size'''
+        head_position_x = self.body_parts[0].head[0]
+        head_position_y = self.body_parts[0].head[1]
+        if  head_position_x == fruit[0] and head_position_y == fruit[1]:
+            return True
+        return False
+
+    def check_collision(self, fruit_coordinates, size):
+        '''check whether collision between fruit and snake head
+        and moves the fruit randomely using randrange
+        parameters:
+        ------------
+        fruit_coordinates = uses the random coordinates of the fruit
+        -----
+        size = uses fruit size'''
+        collision = False
+        head_position = self.body_parts[0].head
+        if fruit_coordinates == head_position:
+            collision = True
+        return collision
+
+    def inside_bounds(self, left_top, right_down):
+        '''Check whether the head of snake is inside its boundaries and returns true
+        parameters:
+        ----------
+        left_top = the upper bound of the window
+        ----
+        example: (0,0)
+        ----
+        right_down = the lower bound of the window
+        ----
+        example: (570,570)'''
+        head_x = self.body_parts[0].head[0]
+        head_y = self.body_parts[0].head[1]
+        upper_bound_up = left_top[0] <= head_x + self.size[0] <= right_down[0]
+        lower_bound_left = left_top[1] <= head_y + self.size[1] <= right_down[1]
+        lower_bound_down = left_top[1] <= head_y <= right_down[1]
+        upper_bound_right = left_top[0] <= head_x <= right_down[0]
+        if upper_bound_up and lower_bound_down and upper_bound_right and lower_bound_down:
+            if upper_bound_up and lower_bound_left and upper_bound_right and lower_bound_left:
+                return True
+        return False
+
+    def check_collision_with_self(self):
+        '''check whether the head of snake collides with its body'''
+        snake_len = len(self.body_parts)
+        head_position = self.body_parts[0].head
+        for i in range(1, snake_len):
+            if head_position == self.body_parts[i].head:
+                return True
+        return False
+
+    def grow(self):
+        '''add a new body part to the snake.'''
+        body_part = Snake_Block(self.body_parts[-1].head, self.size, self.colour)
+        self.body_parts.append(body_part)
+        self.snake_size += 1
+
+    def __iter__(self):
+        '''Iterator function to iterate snake class'''
+        self.iter = 0
+        return self
+
+    def __next__(self):
+        '''Next interator function'''
+        if self.iter < self.snake_size:
+            self.iter += 1
+            return self.body_parts[self.iter-1]
+        raise StopIteration
